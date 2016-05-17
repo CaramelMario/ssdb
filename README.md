@@ -1,6 +1,6 @@
 # SSDB - A fast NoSQL database for storing big list of data
 
-This fork modified [build.sh] and [Makefile] for using ssdb with [TerarkDB](https://github/Terark/terak-db)'s [leveldb compatible api](https://github.com/Terark/terark-db/tree/master/api/leveldb/leveldb/include/leveldb).
+This fork modified [build.sh](build.sh) and [Makefile](Makefile) for using ssdb with [TerarkDB](https://github/Terark/terak-db)'s [leveldb compatible api](https://github.com/Terark/terark-db/tree/master/api/leveldb/leveldb/include/leveldb).
 
 [![Author](https://img.shields.io/badge/author-@ideawu-blue.svg?style=flat)](http://www.ideawu.net/) [![Platform](https://img.shields.io/badge/platform-Linux,%20BSD,%20OS%20X,%20Windows-green.svg?style=flat)](https://github.com/ideawu/ssdb) [![NoSQL](https://img.shields.io/badge/db-NoSQL-pink.svg?tyle=flat)](https://github.com/ideawu/ssdb) [![License](https://img.shields.io/badge/license-New%20BSD-yellow.svg?style=flat)](LICENSE)
 
