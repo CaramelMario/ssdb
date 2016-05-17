@@ -1,6 +1,19 @@
-# SSDB - A fast NoSQL database for storing big list of data
-
 This fork modified [build.sh](build.sh) and [Makefile](Makefile) for using ssdb with [TerarkDB](https://github/Terark/terak-db)'s [leveldb compatible api](https://github.com/Terark/terark-db/tree/master/api/leveldb/leveldb/include/leveldb).
+
+Before using this modified ssdb, you should [download TerarkDB]() and uncompressed to `/path/to/Terark`, for compiling this ssdb, you should execute `env TERARK_DB_HOME=/path/to/TerarkDB make`.
+
+TerarkDB's leveldb compatible api `leveldb::DB::open(dbpath)` put db files into `dbpath/TerarkDB`. For ssdb, `dbpath` is configured in `ssdb.conf`, by var `work_dir`. TerarkDB's `leveldb::DB::open` will create a default `dbpath/TerarkDB/dbmeta.json`, if you want to change db config parameters, create your own `dbpath/TerarkDB/dbmeta.json` before open the db, see [more document of dbmeta.josn](http://terark.com/zh/docs/4), the default `dbmeta.json` for leveldb is:
+
+```json
+{
+  "RowSchema": {"columns": {
+      "key": {"type": "carbin"}, "val": {"type": "carbin"}
+  }},
+  "TableIndex": [ {"fields": "key", "unique": true} ]
+}
+```
+
+# SSDB - A fast NoSQL database for storing big list of data
 
 [![Author](https://img.shields.io/badge/author-@ideawu-blue.svg?style=flat)](http://www.ideawu.net/) [![Platform](https://img.shields.io/badge/platform-Linux,%20BSD,%20OS%20X,%20Windows-green.svg?style=flat)](https://github.com/ideawu/ssdb) [![NoSQL](https://img.shields.io/badge/db-NoSQL-pink.svg?tyle=flat)](https://github.com/ideawu/ssdb) [![License](https://img.shields.io/badge/license-New%20BSD-yellow.svg?style=flat)](LICENSE)
 
