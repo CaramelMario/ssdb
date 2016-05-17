@@ -1,7 +1,42 @@
 #!/bin/sh
+set -e
+if [ -z "$CXX" ]; then
+	CXX=g++
+fi
+${CXX} -o a -x c++ - << EOF
+#include <stdio.h>
+int main() {
+#ifdef __clang_major__
+	printf("clang-%d.%d", __clang_major__, __clang_minor__);
+#elif defined(__INTEL_COMPILER)
+	printf("icc-%d.%d", __INTEL_COMPILER/100, __INTEL_COMPILER%100);
+#elif defined(__GNUC__)
+	printf("g++-%d.%d", __GNUC__, __GNUC_MINOR__);
+#endif
+	return 0;
+}
+EOF
+COMPILER=`./a && rm -f a a.exe`
 BASE_DIR=`pwd`
 JEMALLOC_PATH="$BASE_DIR/deps/jemalloc-4.1.0"
-LEVELDB_PATH="$BASE_DIR/deps/leveldb-1.18"
+#LEVELDB_PATH="$BASE_DIR/deps/leveldb-1.18"
+if [ -z "$TERARK_DB_HOME" ]; then
+	TERARK_DB_LIB="-L$PWD/../terark-db/lib"
+	TERARK_FSA_LIB="-L$PWD/../terark/lib"
+	LEVELDB_PATH="$PWD/../terark-db/api/leveldb/leveldb"
+else
+	TERARK_DB_LIB="-L$TERARK_DB_HOME/lib"
+	TERARK_FSA_LIB="-L$TERARK_DB_HOME/lib"
+	LEVELDB_PATH="$TERARK_DB_HOME/api/leveldb"
+fi
+if [ -z "$TERARK_DEBUG" -o "$TERARK_DEBUG" = 0 ]; then
+	TERARK_LIB_SUFFIX="r"
+else
+	TERARK_LIB_SUFFIX="d"
+fi
+TERARK_DB_LIB="$TERARK_DB_LIB -lterark-db-${COMPILER}-${TERARK_LIB_SUFFIX}"
+TERARK_FSA_LIB="$TERARK_FSA_LIB -lterark-fsa_all-${COMPILER}-${TERARK_LIB_SUFFIX}"
+
 SNAPPY_PATH="$BASE_DIR/deps/snappy-1.1.0"
 
 if test -z "$TARGET_OS"; then
@@ -127,7 +162,8 @@ echo "CFLAGS += ${PLATFORM_CFLAGS}" >> build_config.mk
 echo "CFLAGS += -I \"$LEVELDB_PATH/include\"" >> build_config.mk
 
 echo "CLIBS=" >> build_config.mk
-echo "CLIBS += \"$LEVELDB_PATH/libleveldb.a\"" >> build_config.mk
+echo "CLIBS += $TERARK_DB_LIB" >> build_config.mk
+echo "CLIBS += $TERARK_FSA_LIB" >> build_config.mk
 echo "CLIBS += \"$SNAPPY_PATH/.libs/libsnappy.a\"" >> build_config.mk
 
 case "$TARGET_OS" in

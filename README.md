@@ -51,7 +51,9 @@ echo $resp; // output: 123
 $ wget --no-check-certificate https://github.com/ideawu/ssdb/archive/master.zip
 $ unzip master
 $ cd ssdb-master
-$ make
+$ # For building with TerarkDB's leveldb api
+$ # TERARK_DB_HOME is the directory which contains subdir 'api'
+$ env TERARK_DB_HOME=/path/to/TerarkDB make
 $ #optional, install ssdb in /usr/local/ssdb
 $ sudo make install
 
