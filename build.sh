@@ -21,14 +21,12 @@ BASE_DIR=`pwd`
 JEMALLOC_PATH="$BASE_DIR/deps/jemalloc-4.1.0"
 #LEVELDB_PATH="$BASE_DIR/deps/leveldb-1.18"
 if [ -z "$TERARK_DB_HOME" ]; then
-	TERARK_DB_LIB="-L$PWD/../terark-db/lib"
-	TERARK_FSA_LIB="-L$PWD/../terark/lib"
-	LEVELDB_PATH="$PWD/../terark-db/api/leveldb/leveldb"
-else
-	TERARK_DB_LIB="-L$TERARK_DB_HOME/lib"
-	TERARK_FSA_LIB="-L$TERARK_DB_HOME/lib"
-	LEVELDB_PATH="$TERARK_DB_HOME/api/leveldb"
+	TERARK_DB_HOME="$PWD/../terark-db/pkg/terark-db-Linux-x86_64-g++-5.3-bmi2-0"
 fi
+TERARK_DB_LIB="-L$TERARK_DB_HOME/lib"
+TERARK_FSA_LIB="-L$TERARK_DB_HOME/lib"
+LEVELDB_PATH="$TERARK_DB_HOME/api/leveldb"
+
 if [ -z "$TERARK_DEBUG" -o "$TERARK_DEBUG" = 0 ]; then
 	TERARK_LIB_SUFFIX="r"
 else
@@ -160,6 +158,7 @@ echo "CFLAGS=" >> build_config.mk
 echo "CFLAGS = -DNDEBUG -D__STDC_FORMAT_MACROS -Wall -O2 -Wno-sign-compare" >> build_config.mk
 echo "CFLAGS += ${PLATFORM_CFLAGS}" >> build_config.mk
 echo "CFLAGS += -I \"$LEVELDB_PATH/include\"" >> build_config.mk
+echo "CFLAGS += -I \"$TERARK_DB_HOME/include\"" >> build_config.mk
 
 echo "CLIBS=" >> build_config.mk
 echo "CLIBS += $TERARK_DB_LIB" >> build_config.mk
