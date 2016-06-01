@@ -13,7 +13,7 @@ TerarkDB's leveldb compatible api `leveldb::DB::open(dbpath)` put db files into 
 }
 ```
 
-<h4> Note: <strong>DONT</strong> start ssdb-server with -d (daemon) option, its daemonize will cause TerarkDB background threads exit. USE nohup ./ssdb-server ssdb.conf instead</h4>
+<h4> Note: <strong>DONT</strong> start ssdb-server with -d (daemon) option, its daemonize will cause TerarkDB background threads exit. USE `nohup ./ssdb-server ssdb.conf` instead</h4>
 
 # SSDB - A fast NoSQL database for storing big list of data
 
