@@ -65,7 +65,7 @@ echo $resp; // output: 123
 ## Compile and Install
 
 ```sh
-$ wget --no-check-certificate https://github.com/ideawu/ssdb/archive/master.zip
+$ wget --no-check-certificate https://github.com/Terark/ssdb/archive/master.zip
 $ unzip master
 $ cd ssdb-master
 $ # For building with TerarkDB's leveldb api
