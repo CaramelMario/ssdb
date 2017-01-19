@@ -168,6 +168,11 @@ NetworkServer* NetworkServer::init(const Config &conf, int num_readers, int num_
 			fprintf(stderr, "error opening server socket! %s\n", strerror(errno));
 			exit(1);
 		}
+		// see UNP
+		// if client send RST between server's calls of select() and accept(),
+		// accept() will block until next connection.
+		// so, set server socket nonblock.
+		serv->serv_link->noblock();
 		log_info("server listen on %s:%d", ip, port);
 
 		std::string password;
@@ -209,6 +214,8 @@ void NetworkServer::serve(){
 	uint32_t last_ticks = g_ticks;
 	
 	while(!quit){
+		double loop_stime = millitime();
+
 		// status report
 		if((uint32_t)(g_ticks - last_ticks) >= STATUS_REPORT_TICKS){
 			last_ticks = g_ticks;
@@ -238,10 +245,12 @@ void NetworkServer::serve(){
 					log_debug("new link from %s:%d, fd: %d, links: %d",
 						link->remote_ip, link->remote_port, link->fd(), this->link_count);
 					fdes->set(link->fd(), FDEVENT_IN, 1, link);
+				}else{
+					log_debug("accept return NULL");
 				}
 			}else if(fde->data.ptr == this->reader || fde->data.ptr == this->writer){
 				ProcWorkerPool *worker = (ProcWorkerPool *)fde->data.ptr;
-				ProcJob *job;
+				ProcJob *job = NULL;
 				if(worker->pop(&job) == 0){
 					log_fatal("reading result from workers error!");
 					exit(0);
@@ -284,18 +293,20 @@ void NetworkServer::serve(){
 			int result = this->proc(job);
 			if(result == PROC_THREAD){
 				fdes->del(link->fd());
-				continue;
-			}
-			if(result == PROC_BACKEND){
+			}else if(result == PROC_BACKEND){
 				fdes->del(link->fd());
 				this->link_count --;
-				continue;
-			}
-			
-			if(proc_result(job, &ready_list_2) == PROC_ERROR){
-				//
+			}else{
+				if(proc_result(job, &ready_list_2) == PROC_ERROR){
+					//
+				}
 			}
 		} // end foreach ready link
+
+		double loop_time = millitime() - loop_stime;
+		if(loop_time > 0.5){
+			log_warn("long loop time: %.3f", loop_time);
+		}
 	}
 }
 
@@ -400,7 +411,8 @@ int NetworkServer::proc_client_event(const Fdevent *fde, ready_list_t *ready_lis
 		int len = link->read();
 		//log_debug("fd: %d read: %d", link->fd(), len);
 		if(len <= 0){
-			log_debug("fd: %d, read: %d, delete link", link->fd(), len);
+			double serv_time = millitime() - link->create_time;
+			log_debug("fd: %d, read: %d, delete link, s:%.3f", link->fd(), len, serv_time);
 			link->mark_error();
 			return 0;
 		}

@@ -37,6 +37,15 @@ TERARK_FSA_LIB="$TERARK_FSA_LIB -lterark-fsa_all-${COMPILER}-${TERARK_LIB_SUFFIX
 
 SNAPPY_PATH="$BASE_DIR/deps/snappy-1.1.0"
 
+# dependency check
+which autoconf > /dev/null 2>&1
+if [ "$?" -ne 0 ]; then
+	echo ""
+	echo "ERROR! autoconf required! install autoconf first"
+	echo ""
+	exit 1
+fi
+
 if test -z "$TARGET_OS"; then
 	TARGET_OS=`uname -s`
 fi
