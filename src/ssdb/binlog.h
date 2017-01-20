@@ -6,12 +6,15 @@ found in the LICENSE file.
 #ifndef SSDB_BINLOG_H_
 #define SSDB_BINLOG_H_
 
+// use rocksdb instead of leveldb
+#define leveldb rocksdb
+
 #include <string>
-#include "leveldb/db.h"
-#include "leveldb/options.h"
-#include "leveldb/slice.h"
-#include "leveldb/status.h"
-#include "leveldb/write_batch.h"
+#include <rocksdb/db.h>
+#include <rocksdb/options.h>
+#include <rocksdb/slice.h>
+#include <rocksdb/status.h>
+#include <rocksdb/write_batch.h>
 #include "../util/thread.h"
 #include "../util/bytes.h"
 

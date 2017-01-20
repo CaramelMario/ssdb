@@ -6,8 +6,11 @@ found in the LICENSE file.
 #ifndef SSDB_IMPL_H_
 #define SSDB_IMPL_H_
 
-#include "leveldb/db.h"
-#include "leveldb/slice.h"
+// use rocksdb instead of leveldb
+#define leveldb rocksdb
+
+#include <rocksdb/db.h>
+#include <rocksdb/slice.h>
 #include "../util/log.h"
 #include "../util/config.h"
 

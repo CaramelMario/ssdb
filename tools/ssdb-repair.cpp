@@ -3,16 +3,18 @@ Copyright (c) 2012-2015 The SSDB Authors. All rights reserved.
 Use of this source code is governed by a BSD-style license that can be
 found in the LICENSE file.
 */
+// use rocksdb instead of leveldb
+#define leveldb rocksdb
 #include "include.h"
 
 #include <string>
 #include <vector>
 
-#include "leveldb/db.h"
-#include "leveldb/env.h"
-#include "leveldb/options.h"
-#include "leveldb/slice.h"
-#include "leveldb/iterator.h"
+#include <rocksdb/db.h>
+#include <rocksdb/env.h>
+#include <rocksdb/options.h>
+#include <rocksdb/slice.h>
+#include <rocksdb/iterator.h>
 
 #include "util/log.h"
 #include "util/file.h"
@@ -47,9 +49,12 @@ int main(int argc, char **argv){
 	}
 	
 	leveldb::Status status;
-	
-	leveldb::Logger *logger;
-	status = leveldb::Env::Default()->NewLogger("repair.log", &logger);
+
+	std::shared_ptr<leveldb::Logger> p_logger;
+
+	status = leveldb::Env::Default()->NewLogger("repair.log", &p_logger);
+	// NewLogger return a Logger with p_logger
+
 	if(!status.ok()){
 		printf("logger error!\n");
 		return 0;
@@ -57,7 +62,7 @@ int main(int argc, char **argv){
 	printf("writing repair log into: repair.log\n");
 
 	leveldb::Options options;
-	options.info_log = logger;
+	options.info_log = p_logger;
 	status = leveldb::RepairDB(leveldb_folder.c_str(), options);
 	if(!status.ok()){
 		printf("repair leveldb: %s error!\n", leveldb_folder.c_str());

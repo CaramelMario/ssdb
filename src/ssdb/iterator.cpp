@@ -3,6 +3,9 @@ Copyright (c) 2012-2014 The SSDB Authors. All rights reserved.
 Use of this source code is governed by a BSD-style license that can be
 found in the LICENSE file.
 */
+// use rocksdb instead of leveldb
+#define leveldb rocksdb
+
 #include "iterator.h"
 #include "t_kv.h"
 #include "t_hash.h"
@@ -10,7 +13,7 @@ found in the LICENSE file.
 #include "t_queue.h"
 #include "../util/log.h"
 #include "../util/config.h"
-#include "leveldb/iterator.h"
+#include <rocksdb/iterator.h>
 
 Iterator::Iterator(leveldb::Iterator *it,
 		const std::string &end,

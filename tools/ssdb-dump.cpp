@@ -3,6 +3,9 @@ Copyright (c) 2012-2015 The SSDB Authors. All rights reserved.
 Use of this source code is governed by a BSD-style license that can be
 found in the LICENSE file.
 */
+// use rocksdb instead of leveldb
+#define leveldb rocksdb
+
 #include "include.h"
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -10,10 +13,10 @@ found in the LICENSE file.
 #include <string>
 #include <vector>
 
-#include "leveldb/db.h"
-#include "leveldb/options.h"
-#include "leveldb/slice.h"
-#include "leveldb/iterator.h"
+#include <rocksdb/db.h>
+#include <rocksdb/options.h>
+#include <rocksdb/slice.h>
+#include <rocksdb/iterator.h>
 
 #include "include.h"
 #include "ssdb/const.h"

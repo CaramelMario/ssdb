@@ -5,10 +5,10 @@ include build_config.mk
 
 all:
 	mkdir -p var var_slave
-	chmod u+x "${LEVELDB_PATH}/build_detect_platform"
+#	chmod u+x "${LEVELDB_PATH}/build_detect_platform"
 	chmod u+x deps/cpy/cpy
 	chmod u+x tools/ssdb-cli
-	cd "${LEVELDB_PATH}"; ${MAKE}
+#	cd "${LEVELDB_PATH}"; ${MAKE}
 	cd src/util; ${MAKE}
 	cd src/net; ${MAKE}
 	cd src/client; ${MAKE}
@@ -19,10 +19,10 @@ all:
 .PHONY: ios
 	
 ios:
-	cd "${LEVELDB_PATH}"; make clean; CXXFLAGS=-stdlib=libc++ ${MAKE} PLATFORM=IOS
+#	cd "${LEVELDB_PATH}"; make clean; CXXFLAGS=-stdlib=libc++ ${MAKE} PLATFORM=IOS
 	cd "${SNAPPY_PATH}"; make clean; make -f Makefile-ios
 	mkdir -p ios
-	mv ${LEVELDB_PATH}/libleveldb-ios.a ${SNAPPY_PATH}/libsnappy-ios.a ios/
+#	mv ${LEVELDB_PATH}/libleveldb-ios.a ${SNAPPY_PATH}/libsnappy-ios.a ios/
 	cd src/util; make clean; ${MAKE} -f Makefile-ios
 	cd src/ssdb; make clean; ${MAKE} -f Makefile-ios
 
@@ -58,7 +58,7 @@ clean:
 	cd tools; ${MAKE} clean
 
 clean_all: clean
-	cd "${LEVELDB_PATH}"; ${MAKE} clean
+#	cd "${LEVELDB_PATH}"; ${MAKE} clean
 	rm -f ${JEMALLOC_PATH}/Makefile
 	cd "${SNAPPY_PATH}"; ${MAKE} clean
 	rm -f ${SNAPPY_PATH}/Makefile

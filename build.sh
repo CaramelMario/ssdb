@@ -1,8 +1,11 @@
 #!/bin/sh
 BASE_DIR=`pwd`
 JEMALLOC_PATH="$BASE_DIR/deps/jemalloc-4.1.0"
-LEVELDB_PATH="$BASE_DIR/deps/leveldb-1.18"
+# LEVELDB_PATH="$BASE_DIR/deps/leveldb-1.18"
 SNAPPY_PATH="$BASE_DIR/deps/snappy-1.1.0"
+if [ -z "$ROCKS_DB_HOME" ]; then
+    ROCKS_DB_HOME="$PWD/../rocksdb"
+fi
 
 # dependency check
 which autoconf > /dev/null 2>&1
@@ -126,25 +129,29 @@ rm -f build_config.mk
 echo CC=$CC >> build_config.mk
 echo CXX=$CXX >> build_config.mk
 echo "MAKE=$MAKE" >> build_config.mk
-echo "LEVELDB_PATH=$LEVELDB_PATH" >> build_config.mk
+# echo "LEVELDB_PATH=$LEVELDB_PATH" >> build_config.mk
 echo "JEMALLOC_PATH=$JEMALLOC_PATH" >> build_config.mk
 echo "SNAPPY_PATH=$SNAPPY_PATH" >> build_config.mk
 
 echo "CFLAGS=" >> build_config.mk
-echo "CFLAGS = -DNDEBUG -D__STDC_FORMAT_MACROS -Wall -O2 -Wno-sign-compare" >> build_config.mk
+echo "CFLAGS = -DNDEBUG -D__STDC_FORMAT_MACROS -Wall -O2 -Wno-sign-compare -std=c++11" >> build_config.mk
 echo "CFLAGS += ${PLATFORM_CFLAGS}" >> build_config.mk
-echo "CFLAGS += -I \"$LEVELDB_PATH/include\"" >> build_config.mk
+# echo "CFLAGS += -I \"$LEVELDB_PATH/include\"" >> build_config.mk
 
 echo "CLIBS=" >> build_config.mk
-echo "CLIBS += \"$LEVELDB_PATH/libleveldb.a\"" >> build_config.mk
+# echo "CLIBS += \"$LEVELDB_PATH/libleveldb.a\"" >> build_config.mk
 echo "CLIBS += \"$SNAPPY_PATH/.libs/libsnappy.a\"" >> build_config.mk
+echo "CLIBS += \"$ROCKS_DB_HOME/librocksdb.a\"" >> build_config.mk
+echo "CFLAGS += -I\"$ROCKS_DB_HOME/include\" -lz -lsnappy -lbz2" >> build_config.mk
+echo "EXTRA_LIB=" >> build_config.mk
+echo "EXTRA_LIB += -lz -lsnappy -lbz2" >> build_config.mk
 
 case "$TARGET_OS" in
 	CYGWIN*|FreeBSD|OS_ANDROID_CROSSCOMPILE)
 	;;
 	*)
 		echo "CLIBS += \"$JEMALLOC_PATH/lib/libjemalloc.a\"" >> build_config.mk
-		echo "CFLAGS += -I \"$JEMALLOC_PATH/include\"" >> build_config.mk
+		echo "CFLAGS += -I\"$JEMALLOC_PATH/include\"" >> build_config.mk
 	;;
 esac
 
