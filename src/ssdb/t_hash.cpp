@@ -22,7 +22,7 @@ int SSDBImpl::hset(const Bytes &name, const Bytes &key, const Bytes &val, char l
 				return -1;
 			}
 		}
-		leveldb::Status s = binlogs->commit();
+		rocksdb::Status s = binlogs->commit();
 		if(!s.ok()){
 			return -1;
 		}
@@ -40,7 +40,7 @@ int SSDBImpl::hdel(const Bytes &name, const Bytes &key, char log_type){
 				return -1;
 			}
 		}
-		leveldb::Status s = binlogs->commit();
+		rocksdb::Status s = binlogs->commit();
 		if(!s.ok()){
 			return -1;
 		}
@@ -74,7 +74,7 @@ int SSDBImpl::hincr(const Bytes &name, const Bytes &key, int64_t by, int64_t *ne
 				return -1;
 			}
 		}
-		leveldb::Status s = binlogs->commit();
+		rocksdb::Status s = binlogs->commit();
 		if(!s.ok()){
 			return -1;
 		}
@@ -85,9 +85,9 @@ int SSDBImpl::hincr(const Bytes &name, const Bytes &key, int64_t by, int64_t *ne
 int64_t SSDBImpl::hsize(const Bytes &name){
 	std::string size_key = encode_hsize_key(name);
 	std::string val;
-	leveldb::Status s;
+	rocksdb::Status s;
 
-	s = ldb->Get(leveldb::ReadOptions(), size_key, &val);
+	s = ldb->Get(rocksdb::ReadOptions(), size_key, &val);
 	if(s.IsNotFound()){
 		return 0;
 	}else if(!s.ok()){
@@ -126,7 +126,7 @@ int64_t SSDBImpl::hclear(const Bytes &name){
 
 int SSDBImpl::hget(const Bytes &name, const Bytes &key, std::string *val){
 	std::string dbkey = encode_hash_key(name, key);
-	leveldb::Status s = ldb->Get(leveldb::ReadOptions(), dbkey, val);
+	rocksdb::Status s = ldb->Get(rocksdb::ReadOptions(), dbkey, val);
 	if(s.IsNotFound()){
 		return 0;
 	}
@@ -275,7 +275,7 @@ static int incr_hsize(SSDBImpl *ssdb, const Bytes &name, int64_t incr){
 	if(size == 0){
 		ssdb->binlogs->Delete(size_key);
 	}else{
-		ssdb->binlogs->Put(size_key, leveldb::Slice((char *)&size, sizeof(int64_t)));
+		ssdb->binlogs->Put(size_key, rocksdb::Slice((char *)&size, sizeof(int64_t)));
 	}
 	return 0;
 }

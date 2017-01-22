@@ -7,8 +7,6 @@ found in the LICENSE file.
 #define SSDB_IMPL_H_
 
 // use rocksdb instead of leveldb
-#define leveldb rocksdb
-
 #include <rocksdb/db.h>
 #include <rocksdb/slice.h>
 #include "../util/log.h"
@@ -23,16 +21,16 @@ found in the LICENSE file.
 #include "t_queue.h"
 
 inline
-static leveldb::Slice slice(const Bytes &b){
-	return leveldb::Slice(b.data(), b.size());
+static rocksdb::Slice slice(const Bytes &b){
+	return rocksdb::Slice(b.data(), b.size());
 }
 
 class SSDBImpl : public SSDB
 {
 private:
 	friend class SSDB;
-	leveldb::DB* ldb;
-	leveldb::Options options;
+	rocksdb::DB* ldb;
+	rocksdb::Options options;
 	
 	SSDBImpl();
 public:

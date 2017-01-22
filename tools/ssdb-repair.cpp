@@ -3,8 +3,6 @@ Copyright (c) 2012-2015 The SSDB Authors. All rights reserved.
 Use of this source code is governed by a BSD-style license that can be
 found in the LICENSE file.
 */
-// use rocksdb instead of leveldb
-#define leveldb rocksdb
 #include "include.h"
 
 #include <string>
@@ -28,7 +26,7 @@ void welcome(){
 
 void usage(int argc, char **argv){
 	printf("Usage:\n");
-	printf("    %s leveldb_folder\n", argv[0]);
+	printf("    %s rocksdb_folder\n", argv[0]);
 	printf("\n");
 }
 
@@ -41,18 +39,18 @@ int main(int argc, char **argv){
 		usage(argc, argv);
 		return 0;
 	}
-	std::string leveldb_folder(argv[1]);
+	std::string rocksdb_folder(argv[1]);
 
-	if(!file_exists(leveldb_folder.c_str())){
-		printf("leveldb_folder[%s] not exists!\n", leveldb_folder.c_str());
+	if(!file_exists(rocksdb_folder.c_str())){
+		printf("rocksdb_folder[%s] not exists!\n", rocksdb_folder.c_str());
 		return 0;
 	}
 	
-	leveldb::Status status;
+	rocksdb::Status status;
 
-	std::shared_ptr<leveldb::Logger> p_logger;
+	std::shared_ptr<rocksdb::Logger> p_logger;
 
-	status = leveldb::Env::Default()->NewLogger("repair.log", &p_logger);
+	status = rocksdb::Env::Default()->NewLogger("repair.log", &p_logger);
 	// NewLogger return a Logger with p_logger
 
 	if(!status.ok()){
@@ -61,15 +59,15 @@ int main(int argc, char **argv){
 	}
 	printf("writing repair log into: repair.log\n");
 
-	leveldb::Options options;
+	rocksdb::Options options;
 	options.info_log = p_logger;
-	status = leveldb::RepairDB(leveldb_folder.c_str(), options);
+	status = rocksdb::RepairDB(rocksdb_folder.c_str(), options);
 	if(!status.ok()){
-		printf("repair leveldb: %s error!\n", leveldb_folder.c_str());
+		printf("repair rocksdb: %s error!\n", rocksdb_folder.c_str());
 		return 0;
 	}
 	
-	printf("leveldb repaired.\n");
+	printf("rocksdb repaired.\n");
 
 	return 0;
 }

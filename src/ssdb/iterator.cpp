@@ -4,8 +4,6 @@ Use of this source code is governed by a BSD-style license that can be
 found in the LICENSE file.
 */
 // use rocksdb instead of leveldb
-#define leveldb rocksdb
-
 #include "iterator.h"
 #include "t_kv.h"
 #include "t_hash.h"
@@ -15,7 +13,7 @@ found in the LICENSE file.
 #include "../util/config.h"
 #include <rocksdb/iterator.h>
 
-Iterator::Iterator(leveldb::Iterator *it,
+Iterator::Iterator(rocksdb::Iterator *it,
 		const std::string &end,
 		uint64_t limit,
 		Direction direction)
@@ -32,12 +30,12 @@ Iterator::~Iterator(){
 }
 
 Bytes Iterator::key(){
-	leveldb::Slice s = it->key();
+	rocksdb::Slice s = it->key();
 	return Bytes(s.data(), s.size());
 }
 
 Bytes Iterator::val(){
-	leveldb::Slice s = it->value();
+	rocksdb::Slice s = it->value();
 	return Bytes(s.data(), s.size());
 }
 

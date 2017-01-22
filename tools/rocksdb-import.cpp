@@ -3,9 +3,6 @@ Copyright (c) 2012-2015 The SSDB Authors. All rights reserved.
 Use of this source code is governed by a BSD-style license that can be
 found in the LICENSE file.
 */
-// use rocksdb instead of leveldb
-#define leveldb rocksdb
-
 #include "include.h"
 
 #include <string>
@@ -22,7 +19,7 @@ found in the LICENSE file.
 #include "util/strings.h"
 
 void welcome(){
-	printf("leveldb-import - Import existing leveldb into ssdb\n");
+	printf("rocksdb-import - Import existing rocksdb into ssdb\n");
 	printf("Copyright (c) 2013-2015 ssdb.io\n");
 	printf("\n");
 }
@@ -34,7 +31,7 @@ void usage(int argc, char **argv){
 	printf("Options:\n");
 	printf("    ip - ssdb server ip address\n");
 	printf("    port - ssdb server port number\n");
-	printf("    input_folder - local leveldb folder\n");
+	printf("    input_folder - local rocksdb folder\n");
 }
 
 int main(int argc, char **argv){
@@ -65,19 +62,19 @@ int main(int argc, char **argv){
 		return 0;
 	}
 
-	leveldb::DB* db;
-	leveldb::Options options;
-	leveldb::Status status;
+	rocksdb::DB* db;
+	rocksdb::Options options;
+	rocksdb::Status status;
 	//options.create_if_missing = true;
-	status = leveldb::DB::Open(options, data_dir.c_str(), &db);
+	status = rocksdb::DB::Open(options, data_dir.c_str(), &db);
 	if(!status.ok()){
-		printf("open leveldb: %s error!\n", input_folder);
+		printf("open rocksdb: %s error!\n", input_folder);
 		return 0;
 	}
 
 	printf("importing data...\n");
-	leveldb::Iterator *it;
-	it = db->NewIterator(leveldb::ReadOptions());
+	rocksdb::Iterator *it;
+	it = db->NewIterator(rocksdb::ReadOptions());
 	int save_count = 0;
 	for(it->SeekToFirst(); it->Valid(); it->Next()){
 		std::string key = it->key().ToString();
