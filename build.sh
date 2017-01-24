@@ -3,8 +3,11 @@ BASE_DIR=`pwd`
 JEMALLOC_PATH="$BASE_DIR/deps/jemalloc-4.1.0"
 # LEVELDB_PATH="$BASE_DIR/deps/leveldb-1.18"
 SNAPPY_PATH="$BASE_DIR/deps/snappy-1.1.0"
-if [ -z "$ROCKS_DB_HOME" ]; then
-    ROCKS_DB_HOME="$PWD/../rocksdb"
+if [ -z "$ROCKSDB_HOME" ]; then
+    ROCKSDB_HOME="$PWD/../rocksdb"
+fi
+if [ -z "$TERARK_ZIP_TABLE_HOME" ]; then
+    TERARK_ZIP_TABLE_HOME="$PWD/../terark-zip-rocksdb"
 fi
 
 # dependency check
@@ -141,10 +144,16 @@ echo "CFLAGS += ${PLATFORM_CFLAGS}" >> build_config.mk
 echo "CLIBS=" >> build_config.mk
 # echo "CLIBS += \"$LEVELDB_PATH/libleveldb.a\"" >> build_config.mk
 echo "CLIBS += \"$SNAPPY_PATH/.libs/libsnappy.a\"" >> build_config.mk
-echo "CLIBS += \"$ROCKS_DB_HOME/librocksdb.a\"" >> build_config.mk
-echo "CFLAGS += -I\"$ROCKS_DB_HOME/include\" -lz -lsnappy -lbz2" >> build_config.mk
-echo "EXTRA_LIB=" >> build_config.mk
-echo "EXTRA_LIB += -lz -lsnappy -lbz2" >> build_config.mk
+# echo "CLIBS += \"$ROCKSDB_HOME/librocksdb.a\"" >> build_config.mk
+echo "CFLAGS += -I\"$ROCKSDB_HOME/include\"" >> build_config.mk
+echo "CFLAGS += -I\"$TERARK_ZIP_TABLE_HOME/pkg/terark-zip-rocksdb-Linux-x86_64-g++-5.4-bmi2-0/include\"" >> build_config.mk
+
+echo "TERARK_LIBS=" >> build_config.mk
+echo "TERARK_LIBS += -L\"$TERARK_ZIP_TABLE_HOME/pkg/terark-zip-rocksdb-Linux-x86_64-g++-5.4-bmi2-0/lib\" -lterark-zip-rocksdb-r -lterark-zbs-r -lterark-fsa-r -lterark-core-r" >> build_config.mk
+echo "ROCKSDB_LIBS=" >> build_config.mk
+echo "ROCKSDB_LIBS += -L\"$ROCKSDB_HOME\" -lrocksdb" >> build_config.mk
+echo "EXTRA_LIBS=" >> build_config.mk
+echo "EXTRA_LIBS += -lz -lsnappy -lbz2" >> build_config.mk
 
 case "$TARGET_OS" in
 	CYGWIN*|FreeBSD|OS_ANDROID_CROSSCOMPILE)

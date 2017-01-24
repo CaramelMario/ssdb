@@ -211,6 +211,10 @@ int Config::num() const{
 	return atoi(this->val.c_str());
 }
 
+double Config::double_num() const{
+    return atof(this->val.c_str());
+}
+
 const char* Config::str() const{
 	return this->val.c_str();
 }
@@ -221,6 +225,14 @@ int Config::get_num(const char *key) const{
 		return 0;
 	}
 	return c->num();
+}
+
+double Config::get_double_num(const char *key) const{
+    const Config *c = this->get(key);
+    if(!c){
+        return 0;
+    }
+    return c->double_num();
 }
 
 int64_t Config::get_int64(const char *key) const{

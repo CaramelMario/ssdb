@@ -1,6 +1,8 @@
 This branch use [rocksdb](https://github.com/rockeet/rocksdb) instead of leveldb as the stroage engine
 
 Before using this modified ssdb, you should [download rocksdb](https://github.com/rockeet/rocksdb) and uncompress to `path/to/rocksdb`, compile it to .a lib, then execute `env ROCKS_DB_HOME=path/to/rocksdb make`.
+
+Then run `export LD_LIBRARY_PATH=path/to/rocksdb_lib_dir:path/to/terark_zip_table_lib_home` `./ssdb-server ssdb.conf`
 # SSDB - A fast NoSQL database for storing big list of data
 
 [![Author](https://img.shields.io/badge/author-@ideawu-blue.svg?style=flat)](http://www.ideawu.net/) [![Platform](https://img.shields.io/badge/platform-Linux,%20BSD,%20OS%20X,%20Windows-green.svg?style=flat)](https://github.com/ideawu/ssdb) [![NoSQL](https://img.shields.io/badge/db-NoSQL-pink.svg?tyle=flat)](https://github.com/ideawu/ssdb) [![License](https://img.shields.io/badge/license-New%20BSD-yellow.svg?style=flat)](LICENSE)

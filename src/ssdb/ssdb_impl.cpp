@@ -9,6 +9,7 @@ found in the LICENSE file.
 #include <rocksdb/iterator.h>
 #include <rocksdb/cache.h>
 #include <rocksdb/filter_policy.h>
+#include <table/terark_zip_table.h>
 
 #include "iterator.h"
 #include "t_kv.h"
@@ -38,18 +39,61 @@ SSDBImpl::~SSDBImpl(){
 }
 
 SSDB* SSDB::open(const Options &opt, const std::string &dir){
-	SSDBImpl *ssdb = new SSDBImpl();
+  SSDBImpl *ssdb = new SSDBImpl();
 	ssdb->options.create_if_missing = true;
 	ssdb->options.max_open_files = opt.max_open_files;
+	ssdb->options.write_buffer_size = opt.write_buffer_size * 1024 * 1024;
 
 	//block_size, filter_policy, block_cache moved to BlockTableOptions
-	rocksdb::BlockBasedTableOptions bto;
-	bto.block_size = opt.block_size * 1024;
-	bto.filter_policy.reset(rocksdb::NewBloomFilterPolicy(10));
-	bto.block_cache = std::shared_ptr<rocksdb::Cache>(rocksdb::NewLRUCache(opt.cache_size * 1048576));
-	ssdb->options.table_factory.reset(rocksdb::NewBlockBasedTableFactory(bto));
+	//rocksdb::BlockBasedTableOptions bto;
+	//bto.block_size = opt.block_size * 1024;
+	//bto.filter_policy.reset(rocksdb::NewBloomFilterPolicy(10));
+	//bto.block_cache = std::shared_ptr<rocksdb::Cache>(rocksdb::NewLRUCache(opt.cache_size * 1048576));
+	//ssdb->options.table_factory.reset(rocksdb::NewBlockBasedTableFactory(bto));
+  rocksdb::BlockBasedTableOptions bto;
+  bto.block_cache = rocksdb::NewLRUCache(opt.cache_size * 1024 * 1024LL, 6);
+  bto.filter_policy.reset(rocksdb::NewBloomFilterPolicy(10, false));
+  bto.block_size = opt.block_size * 1024; // 16KB
+  bto.format_version = 2;
+  rocksdb::TerarkZipTableOptions tzt_opt;
+  if(opt.index_nest_level > 10){
+      log_fatal("index nest level must less then 10");
+      exit(1);
+  }
+  tzt_opt.indexNestLevel = opt.index_nest_level;
+  tzt_opt.checksumLevel = opt.check_sum_level;
+  if(opt.entropy_algo == "none"){
+      tzt_opt.entropyAlgo = rocksdb::TerarkZipTableOptions::kNoEntropy;
+  }
+  else if(opt.entropy_algo == "huffman"){
+      tzt_opt.entropyAlgo = rocksdb::TerarkZipTableOptions::kHuffman;
+  }
+  else if(opt.entropy_algo == "FSE"){
+      tzt_opt.entropyAlgo = rocksdb::TerarkZipTableOptions::kFSE;
+  }
+  else{
+      fprintf(stderr, "warning: unknown entro_algo, will use default(none)\n");
+      tzt_opt.entropyAlgo = rocksdb::TerarkZipTableOptions::kNoEntropy;
+  }
+  if(opt.terark_zip_min_level > 100){
+      log_fatal("terark_zip_min_level must less then 100");
+      exit(1);
+  }
+  tzt_opt.terarkZipMinLevel = opt.terark_zip_min_level;
+  tzt_opt.useSuffixArrayLocalMatch = opt.use_suffix_array_local_match;
+  tzt_opt.warmUpIndexOnOpen = opt.warm_up_index_on_open;
+  tzt_opt.warmUpValueOnOpen = opt.warm_up_value_on_open;
+  tzt_opt.estimateCompressionRatio = opt.estimate_compression_ratio;
+  tzt_opt.sampleRatio = opt.sample_ratio;
+  tzt_opt.localTempDir = opt.local_temp_dir;
+  tzt_opt.indexType = opt.index_type;
+  tzt_opt.softZipWorkingMemLimit = opt.soft_zip_working_mem_limit;
+  tzt_opt.hardZipWorkingMemLimit = opt.hard_zip_working_mem_limit;
+  tzt_opt.smallTaskMemory = opt.small_task_memory;
+  tzt_opt.indexCacheRatio = opt.index_cache_ratio;
 
-	ssdb->options.write_buffer_size = opt.write_buffer_size * 1024 * 1024;
+  ssdb->options.table_factory.reset(rocksdb::NewTerarkZipTableFactory(tzt_opt, rocksdb::NewBlockBasedTableFactory(bto)));
+
 
 	if(opt.compression == "yes"){
 		ssdb->options.compression = rocksdb::kSnappyCompression;
