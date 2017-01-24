@@ -60,7 +60,7 @@ void init_data(int num){
 		d->num = buf;
 		snprintf(buf, sizeof(buf), "k%010d", n);
 		d->key = buf;
-		snprintf(buf, sizeof(buf), "v%0100d", n);
+		snprintf(buf, sizeof(buf), "v%0200d", n);
 		d->val = buf;
 		ds->insert(make_pair(d->key, d));
 	}
@@ -100,6 +100,10 @@ void send_req(Link *link, const std::string &cmd, const Data *d){
 		link->send(cmd, "TEST", d->key);
 	}else if(cmd == "zdel"){
 		link->send(cmd, "TEST", d->key);
+	}else if(cmd == "expire"){
+		char szBuf[32];
+		sprintf(szBuf, "%d", rand()%5+1);
+		link->send(cmd, "TEST", d->key, szBuf);
 	}else if(cmd == "qpush"){
 		link->send(cmd, "TEST", d->key);
 	}else if(cmd == "qpop"){
@@ -210,9 +214,12 @@ int main(int argc, char **argv){
 	init_links(clients, ip, port);
 
 	bench("set");
+	bench("expire");
+	bench("set");
+	bench("expire");
 	bench("get");
 	bench("del");
-
+#if 0
 	bench("hset");
 	bench("hget");
 	bench("hdel");
@@ -223,7 +230,7 @@ int main(int argc, char **argv){
 
 	bench("qpush");
 	bench("qpop");
-	
+#endif
 	printf("\n");
 
 	return 0;
