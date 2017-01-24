@@ -12,7 +12,22 @@ found in the LICENSE file.
 	static const int LOG_QUEUE_SIZE  = 10000;
 #endif
 
-Options::Options(){
+Options::Options(): index_nest_level(3),
+                    check_sum_level(1),
+                    entropy_algo("none"),
+                    terark_zip_min_level(0),
+                    use_suffix_array_local_match(false),
+                    warm_up_index_on_open(true),
+                    warm_up_value_on_open(false),
+                    estimate_compression_ratio(0.2),
+                    sample_ratio(0.03),
+                    local_temp_dir("/tmp"),
+                    index_type("IL256"),
+                    soft_zip_working_mem_limit(16ull << 30),
+                    hard_zip_working_mem_limit(32ull << 30),
+                    small_task_memory(1200 << 20),
+                    index_cache_ratio(0)
+{
 	Config c;
 	this->load(c);
 }
@@ -39,9 +54,9 @@ void Options::load(const Config &conf){
   sample_ratio = conf.get_double_num("terark_zip_table.sample_ratio");
   local_temp_dir = conf.get_str("terark_zip_table.local_temp_dir");
   index_type = conf.get_str("terark_zip_table.index_type");
-  soft_zip_working_mem_limit = (size_t)conf.get_num("terark_zip_table.soft_zip_working_mem_limit");
-  hard_zip_working_mem_limit = (size_t)conf.get_num("terark_zip_table.hard_zip_working_mem_limit");
-  small_task_memory = (size_t)conf.get_num("terark_zip_table.small_task_zip_memory");
+  soft_zip_working_mem_limit = conf.get_size_t("terark_zip_table.soft_zip_working_mem_limit");
+  hard_zip_working_mem_limit = conf.get_size_t("terark_zip_table.hard_zip_working_mem_limit");
+  small_task_memory = conf.get_size_t("terark_zip_table.small_task_memory");
   index_cache_ratio = conf.get_double_num("terark_zip_table.index_cache_ratio");
 
 	strtolower(&compression);

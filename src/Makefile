@@ -8,7 +8,7 @@ EXES = ../ssdb-server
 
 
 all: ${OBJS} ssdb-server.o
-	${CXX} -o ../ssdb-server ssdb-server.o ${OBJS} ${LIBS} ${CLIBS} ${CFLAGS} ${EXTRA_LIBS} ${ROCKSDB_LIBS} ${TERARK_LIBS} client/SSDB_impl.o
+	${CXX} -g -o ../ssdb-server ssdb-server.o ${OBJS} ${LIBS} ${CLIBS} ${CFLAGS} ${EXTRA_LIBS} ${ROCKSDB_LIBS} ${TERARK_LIBS} client/SSDB_impl.o
 
 cluster_migrate.o: cluster_migrate.h cluster_migrate.cpp
 	${CXX} ${CFLAGS} -I./client -c cluster_migrate.cpp

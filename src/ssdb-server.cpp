@@ -74,9 +74,9 @@ void MyApplication::run(){
   log_info("sample_ratio                 : %f", option.sample_ratio);
   log_info("local_temp_dir               : %s", option.local_temp_dir.c_str());
   log_info("index_type                   : %s", option.index_type.c_str());
-  log_info("soft_zip_working_mem_limit   : %d KB", option.soft_zip_working_mem_limit);
-  log_info("hard_zip_working_mem_limit   : %d KB", option.hard_zip_working_mem_limit);
-  log_info("small_task_memory            : %d KB", option.small_task_memory);
+  log_info("soft_zip_working_mem_limit   : %zd KB", option.soft_zip_working_mem_limit);
+  log_info("hard_zip_working_mem_limit   : %zd KB", option.hard_zip_working_mem_limit);
+  log_info("small_task_memory            : %zd KB", option.small_task_memory);
   log_info("index_cache_ratio            : %d", option.index_cache_ratio);
 
 	SSDB *data_db = NULL;

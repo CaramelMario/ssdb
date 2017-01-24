@@ -235,6 +235,14 @@ double Config::get_double_num(const char *key) const{
     return c->double_num();
 }
 
+size_t Config::get_size_t(const char *key) const {
+	const Config *c = this->get(key);
+	if(!c){
+		return 0;
+	}
+	return str_to_uint64(c->val);
+}
+
 int64_t Config::get_int64(const char *key) const{
 	const Config *c = this->get(key);
 	if(!c){

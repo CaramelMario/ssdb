@@ -43,6 +43,7 @@ SSDB* SSDB::open(const Options &opt, const std::string &dir){
 	ssdb->options.create_if_missing = true;
 	ssdb->options.max_open_files = opt.max_open_files;
 	ssdb->options.write_buffer_size = opt.write_buffer_size * 1024 * 1024;
+    ssdb->options.allow_mmap_reads = true;
 
 	//block_size, filter_policy, block_cache moved to BlockTableOptions
 	//rocksdb::BlockBasedTableOptions bto;
@@ -72,7 +73,7 @@ SSDB* SSDB::open(const Options &opt, const std::string &dir){
       tzt_opt.entropyAlgo = rocksdb::TerarkZipTableOptions::kFSE;
   }
   else{
-      fprintf(stderr, "warning: unknown entro_algo, will use default(none)\n");
+      fprintf(stderr, "warning: unknown entropy_algo, will use default(none)\n");
       tzt_opt.entropyAlgo = rocksdb::TerarkZipTableOptions::kNoEntropy;
   }
   if(opt.terark_zip_min_level > 100){
