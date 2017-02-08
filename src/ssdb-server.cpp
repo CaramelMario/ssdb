@@ -62,22 +62,25 @@ void MyApplication::run(){
 	log_info("sync_speed       : %d MB/s", conf->get_num("replication.sync_speed"));
 
   //terark zip table options
-  log_info("terark zip table options");
-  log_info("index_nest_level             : %d", option.index_nest_level);
-  log_info("check_sum_level              : %d", option.check_sum_level);
-  log_info("entropy_algo                 : %s", option.entropy_algo.c_str());
-  log_info("terark_zip_min_level         : %d", option.terark_zip_min_level);
-  log_info("use_suffix_array_local_match : %s", option.use_suffix_array_local_match? "yes" : "no");
-  log_info("warm_up_index_on_open        : %s", option.warm_up_index_on_open? "yes" : "no");
-  log_info("warm_up_value_on_open        : %s", option.warm_up_value_on_open? "yes" : "no");
-  log_info("estimate_compression_ratio   : %f", option.estimate_compression_ratio);
-  log_info("sample_ratio                 : %f", option.sample_ratio);
-  log_info("local_temp_dir               : %s", option.local_temp_dir.c_str());
-  log_info("index_type                   : %s", option.index_type.c_str());
-  log_info("soft_zip_working_mem_limit   : %zd KB", option.soft_zip_working_mem_limit);
-  log_info("hard_zip_working_mem_limit   : %zd KB", option.hard_zip_working_mem_limit);
-  log_info("small_task_memory            : %zd KB", option.small_task_memory);
-  log_info("index_cache_ratio            : %d", option.index_cache_ratio);
+	log_info("terark_enable    : %s", option.terark_enable? "yes" : "no");
+    if(option.terark_enable){
+		log_info("terark zip table options");
+		log_info("index_nest_level             : %d", option.index_nest_level);
+		log_info("check_sum_level              : %d", option.check_sum_level);
+		log_info("entropy_algo                 : %s", option.entropy_algo.c_str());
+		log_info("terark_zip_min_level         : %d", option.terark_zip_min_level);
+		log_info("use_suffix_array_local_match : %s", option.use_suffix_array_local_match? "yes" : "no");
+		log_info("warm_up_index_on_open        : %s", option.warm_up_index_on_open? "yes" : "no");
+		log_info("warm_up_value_on_open        : %s", option.warm_up_value_on_open? "yes" : "no");
+		log_info("estimate_compression_ratio   : %f", option.estimate_compression_ratio);
+		log_info("sample_ratio                 : %f", option.sample_ratio);
+		log_info("local_temp_dir               : %s", option.local_temp_dir.c_str());
+		log_info("index_type                   : %s", option.index_type.c_str());
+		log_info("soft_zip_working_mem_limit   : %zd KB", option.soft_zip_working_mem_limit);
+		log_info("hard_zip_working_mem_limit   : %zd KB", option.hard_zip_working_mem_limit);
+		log_info("small_task_memory            : %zd KB", option.small_task_memory);
+		log_info("index_cache_ratio            : %d", option.index_cache_ratio);
+	}
 
 	SSDB *data_db = NULL;
 	SSDB *meta_db = NULL;

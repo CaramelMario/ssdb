@@ -26,6 +26,7 @@ public:
 	size_t binlog_capacity;
 
     //tarark zip table options
+    bool terark_enable;
     int index_nest_level;
     int check_sum_level;
     std::string entropy_algo;

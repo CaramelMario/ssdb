@@ -12,7 +12,8 @@ found in the LICENSE file.
 	static const int LOG_QUEUE_SIZE  = 10000;
 #endif
 
-Options::Options(): index_nest_level(3),
+Options::Options(): terark_enable(true),
+                    index_nest_level(3),
                     check_sum_level(1),
                     entropy_algo("none"),
                     terark_zip_min_level(0),
@@ -43,6 +44,7 @@ void Options::load(const Config &conf){
 	binlog_capacity = (size_t)conf.get_num("replication.binlog.capacity");
 
   //terark zip table
+    std::string terark_enable = conf.get_str("terark_zip_table.terark_enable");
   index_nest_level = conf.get_num("terark_zip_table.index_nest_level");
   check_sum_level = conf.get_num("terark_zip_table.check_sum_level");
   entropy_algo = conf.get_str("terark_zip_table.entropy_algo");
@@ -92,6 +94,12 @@ void Options::load(const Config &conf){
 		}
 	}
 
+    strtolower(&terark_enable);
+    if(terark_enable == "no"){
+        this->terark_enable = false;
+    }else{
+        this->terark_enable = true;
+    }
   if(index_nest_level < 0){
       index_nest_level = 3;
   }
