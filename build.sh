@@ -146,10 +146,10 @@ echo "CLIBS=" >> build_config.mk
 echo "CLIBS += \"$SNAPPY_PATH/.libs/libsnappy.a\"" >> build_config.mk
 # echo "CLIBS += \"$ROCKSDB_HOME/librocksdb.a\"" >> build_config.mk
 echo "CFLAGS += -I\"$ROCKSDB_HOME/include\"" >> build_config.mk
-echo "CFLAGS += -I\"$TERARK_ZIP_TABLE_HOME/pkg/terark-zip-rocksdb-Linux-x86_64-g++-5.4-bmi2-0/include\"" >> build_config.mk
+echo "CFLAGS += -I\"$TERARK_ZIP_TABLE_HOME/include\"" >> build_config.mk
 
 echo "TERARK_LIBS=" >> build_config.mk
-echo "TERARK_LIBS += -L\"$TERARK_ZIP_TABLE_HOME/pkg/terark-zip-rocksdb-Linux-x86_64-g++-5.4-bmi2-0/lib\" -lterark-zip-rocksdb-r -lterark-zbs-r -lterark-fsa-r -lterark-core-r" >> build_config.mk
+echo "TERARK_LIBS += -L\"$TERARK_ZIP_TABLE_HOME/lib\" -lterark-zip-rocksdb-r -lterark-zbs-r -lterark-fsa-r -lterark-core-r" >> build_config.mk
 echo "ROCKSDB_LIBS=" >> build_config.mk
 echo "ROCKSDB_LIBS += -L\"$ROCKSDB_HOME\" -lrocksdb" >> build_config.mk
 echo "EXTRA_LIBS=" >> build_config.mk
