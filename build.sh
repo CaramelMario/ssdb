@@ -145,15 +145,19 @@ echo "CLIBS=" >> build_config.mk
 # echo "CLIBS += \"$LEVELDB_PATH/libleveldb.a\"" >> build_config.mk
 echo "CLIBS += \"$SNAPPY_PATH/.libs/libsnappy.a\"" >> build_config.mk
 # echo "CLIBS += \"$ROCKSDB_HOME/librocksdb.a\"" >> build_config.mk
+echo "CLIBS += -Wl,--start-group"  >> build_config.mk
+echo "CLIBS += -lterark-zip-rocksdb-r -lterark-zbs-r -lterark-fsa-r -lterark-core-r" >> build_config.mk
+echo "CLIBS += -lrocksdb" >> build_config.mk
+echo "CLIBS += -lz -lsnappy -lbz2" >> build_config.mk
+echo "CLIBS += -Wl,--end-group" >> build_config.mk
+
 echo "CFLAGS += -I\"$ROCKSDB_HOME/include\"" >> build_config.mk
 echo "CFLAGS += -I\"$TERARK_ZIP_TABLE_HOME/include\"" >> build_config.mk
+echo "CFLAGS += -L\"$TERARK_ZIP_TABLE_HOME/lib\"" >> build_config.mk
+echo "CFLAGS += -L\"$ROCKSDB_HOME\"" >> build_config.mk
 
-echo "TERARK_LIBS=" >> build_config.mk
-echo "TERARK_LIBS += -L\"$TERARK_ZIP_TABLE_HOME/lib\" -lterark-zip-rocksdb-r -lterark-zbs-r -lterark-fsa-r -lterark-core-r" >> build_config.mk
-echo "ROCKSDB_LIBS=" >> build_config.mk
-echo "ROCKSDB_LIBS += -L\"$ROCKSDB_HOME\" -lrocksdb" >> build_config.mk
 echo "EXTRA_LIBS=" >> build_config.mk
-echo "EXTRA_LIBS += -lz -lsnappy -lbz2" >> build_config.mk
+echo "EXTRA_LIBS += " >> build_config.mk
 
 case "$TARGET_OS" in
 	CYGWIN*|FreeBSD|OS_ANDROID_CROSSCOMPILE)
